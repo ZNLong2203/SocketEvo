@@ -1,6 +1,6 @@
-import getPrismaInstant from '../utils/PrismaClient';
+const getPrismaInstant = require('../utils/PrismaClient');
 
-exports.checkUser = async (req, res, next) => {
+exports.login = async (req, res, next) => {
     try {
         const { email } = req.body;
         if(!email) {
@@ -13,11 +13,11 @@ exports.checkUser = async (req, res, next) => {
             }
         })
 
-        if(!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }
+        // if(!user) {
+        //     return res.status(404).json({ message: 'User not found' });
+        // }
         return res.status(200).json({ 
-            message: 'User found',
+            message: 'User exists',
             data: user
         });    
     } catch(err) {
