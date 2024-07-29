@@ -8,7 +8,7 @@ export default function App({ Component, pageProps }) {
     <StateProvider initialState={initialState} reducer={reducer}>
       <Head>
         <title>SocketEvo</title>
-        <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+        <link rel="shortcut icon" href="/ZkareLogo.png" type="image/x-icon" />
       </Head>
       <Component {...pageProps} />;
     </StateProvider>
