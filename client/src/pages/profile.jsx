@@ -6,6 +6,7 @@ import { useStateProvider } from "../context/StateContext";
 import Input from "../components/common/Input";
 import Avatar from "../components/common/Avatar";
 import { PROFILE_ROUTE } from "@/utils/ApiRoutes";
+import { reducerCases } from "@/context/constants";
 
 const profile = () => {
   const [{ userInfo, newUser }, dispatch] = useStateProvider();
@@ -14,12 +15,12 @@ const profile = () => {
   const [image, setImage] = useState("/default_avatar.png");
 
   useEffect(() => {
-    if(newUser) {
+    if(newUser && !userInfo) {
         Router.push('/login')
-    } else if(!newUser) {
+    } else if(!newUser && userInfo) {
         Router.push('/')
-    }
-  }, [newUser, userInfo]);
+    } 
+  }, [newUser, userInfo, Router]);
 
   const validate = () => {
     if (name.length < 3) {
@@ -46,13 +47,13 @@ const profile = () => {
             dispatch({
                 type: reducerCases.SET_USER_INFO,
                 userInfo: {
-                    displayName,
+                    displayName: name,
                     email,
                     photoUrl: image,
                     status: about,
                 },
             })
-            Router.push('/')
+            Router.push('/').then(() => window.location.reload());
         }
       } catch (err) {
         console.error(err);

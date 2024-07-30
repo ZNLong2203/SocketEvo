@@ -1,7 +1,7 @@
 import React from "react";
 
-function ChatLIstItem() {
-  return <div>ChatLIstItem</div>;
+function ChatListItem() {
+  return <div>ChatListItem</div>;
 }
 
-export default ChatLIstItem;
+export default ChatListItem;
