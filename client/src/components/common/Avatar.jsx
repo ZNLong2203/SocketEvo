@@ -3,10 +3,12 @@ import Image from "next/image";
 import { FaCamera } from "react-icons/fa";
 import ContextMenu from "./ContextMenu";
 import PhotoPicker from "./PhotoPicker";
+import PhotoLibrary from "./PhotoLibrary";
 
 const Avatar = ({ type, image, setImage }) => {
   const [hover, setHover] = useState(false);
-const [grabPhoto, setGrabPhoto] = useState(false);
+  const [grabPhoto, setGrabPhoto] = useState(false);
+  const [showPhotoLibrary, setShowPhotoLibrary] = useState(false);
   const [isContextMenuVisible, setIsContextMenuVisible] = useState(false);
   const [contextMenuCordinates, setContextMenuCordinates] = useState({
     x: 0,
@@ -18,7 +20,9 @@ const [grabPhoto, setGrabPhoto] = useState(false);
         const data = document.getElementById("photo-picker")
         data.click()
         document.body.onfocus = (e) => {
-            setGrabPhoto(false)
+            setTimeout(() => {
+                setGrabPhoto(false)
+            }, 1000)
         }
     }
   }, [grabPhoto])
@@ -30,8 +34,9 @@ const [grabPhoto, setGrabPhoto] = useState(false);
   };
 
   const contextMenuOptions = [
-    { name: "Take Photo", callback: () => {} },
-    { name: "Choose from Gallery", callback: () => {} },
+    { name: "Choose from Gallery", callback: () => {
+      setShowPhotoLibrary(true);
+    } },
     { name: "Upload Photo", callback: () => {
         setGrabPhoto(true);
     } },
@@ -97,6 +102,7 @@ const [grabPhoto, setGrabPhoto] = useState(false);
         contextMenu={isContextMenuVisible}
         setContextMenu={setIsContextMenuVisible}
         />)}
+        {showPhotoLibrary && <PhotoLibrary setImage={setImage} hidePhotoLibrary={setShowPhotoLibrary}/>}
         {grabPhoto && (<PhotoPicker onChange={photoPickerChange} />)}
     </div>
   );

@@ -10,6 +10,11 @@ generator client {
 model User {
   id        Int      @id @default(autoincrement())
   email     String   @unique
-  name      String?
+  name      String
+  image     String   @default("")
+  about     String   @default("")
   createdAt DateTime @default(now())
 }
+
+// npx prisma db push
+// npx prisma studio

@@ -10,7 +10,7 @@ export default function App({ Component, pageProps }) {
         <title>SocketEvo</title>
         <link rel="shortcut icon" href="/ZkareLogo.png" type="image/x-icon" />
       </Head>
-      <Component {...pageProps} />;
+      <Component {...pageProps} />
     </StateProvider>
   ) 
 }

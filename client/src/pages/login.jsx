@@ -19,7 +19,7 @@ const login = () => {
         try {
             if(email) {
                 const response = await axios.post(CHECK_USER_ROUTE, { email });
-                if(response) {
+                if(response.data.user === null) {
                     dispatch({
                         type: reducerCases.SET_NEW_USER,
                         newUser: true,
@@ -34,6 +34,16 @@ const login = () => {
                         },
                     })
                     Router.push('/profile');
+                } else {
+                    dispatch({
+                        type: reducerCases.SET_NEW_USER,
+                        newUser: false,
+                    }),
+                    dispatch({
+                        type: reducerCases.SET_USER_INFO,
+                        userInfo: response.data.user,
+                    })
+                    Router.push('/');
                 }
             }
         } catch(err) {
