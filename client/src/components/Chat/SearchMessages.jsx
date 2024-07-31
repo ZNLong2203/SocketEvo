@@ -1,7 +1,11 @@
 import React from "react";
 
-function SearchMessages() {
-  return <div>SearchMessages</div>;
+const SearchMessages = () => {
+  return(
+    <div>
+      
+    </div>
+  )
 }
 
 export default SearchMessages;

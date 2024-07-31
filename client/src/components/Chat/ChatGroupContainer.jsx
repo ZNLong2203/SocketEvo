@@ -1,7 +1,11 @@
 import React from "react";
 
-function ChatGroupContainer() {
-  return <div>ChatGroupContainer</div>;
+const ChatGroupContainer = () => {
+  return(
+    <div>
+      
+    </div>
+  )
 }
 
 export default ChatGroupContainer;

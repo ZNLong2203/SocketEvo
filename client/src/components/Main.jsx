@@ -3,6 +3,7 @@ import axios from "axios";
 import Router from "next/router";
 import ChatList from "./Chatlist/ChatList";
 import Empty from "./Empty";
+import Chat from "./Chat/Chat";
 import { onAuthStateChanged } from "firebase/auth";
 import firebaseAuth from "@/utils/FirebaseConfig";
 import { CHECK_USER_ROUTE } from "@/utils/ApiRoutes";
@@ -65,7 +66,8 @@ const Main = () => {
   return (
     <div className="grid grid-cols-3 h-screen w-screen max-h-screen max-w-full overflow-hidden">
       <ChatList />
-      <Empty />
+      {/* <Empty /> */}
+      <Chat />
     </div>
   );
 };
