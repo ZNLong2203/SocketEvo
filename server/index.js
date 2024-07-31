@@ -15,6 +15,14 @@ app.use(helmet());
 app.use(compression());
 app.use('/', mainRoute);
 
+app.use((err, req, res, next) => {
+    console.error(err.stack)
+    res.status(err.status || 500).json({
+        message: err.message || 'Internal Server Error',
+        error: err
+    })
+})
+
 app.listen(process.env.PORT || 3000, () => {
     console.log(`Server is running on port ${process.env.PORT || 3000}`);
 })

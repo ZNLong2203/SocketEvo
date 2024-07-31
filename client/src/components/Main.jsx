@@ -12,7 +12,7 @@ import { reducerCases } from "@/context/constants";
 
 const Main = () => {
   const [redirectLogin, setRedirectLogin] = useState(false);
-  const [{ userInfo }, dispatch] = useStateProvider();
+  const [{ userInfo, currentChatUser }, dispatch] = useStateProvider();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(firebaseAuth, async (currentUser) => {
@@ -66,7 +66,9 @@ const Main = () => {
   return (
     <div className="grid grid-cols-3 h-screen w-screen max-h-screen max-w-full overflow-hidden">
       <ChatList />
-      {/* <Empty /> */}
+      {
+        currentChatUser ? <Chat /> : <Empty />
+      }
       <Chat />
     </div>
   );

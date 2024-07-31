@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useStateProvider } from "../context/StateContext";
 import Input from "../components/common/Input";
 import Avatar from "../components/common/Avatar";
-import { PROFILE_ROUTE } from "@/utils/ApiRoutes";
+import { USERS_ROUTE } from "@/utils/ApiRoutes";
 import { reducerCases } from "@/context/constants";
 
 const profile = () => {
@@ -33,7 +33,7 @@ const profile = () => {
     if (validate()) {
       const email = userInfo.email;
       try {
-        const response = await axios.post(PROFILE_ROUTE, {
+        const response = await axios.post(USERS_ROUTE, {
           email,
           name,
           about,
@@ -53,7 +53,7 @@ const profile = () => {
                     status: about,
                 },
             })
-            Router.push('/').then(() => window.location.reload());
+            Router.push('/').then(() => setTimeout(() => window.location.reload(), 2000));
         }
       } catch (err) {
         console.error(err);
