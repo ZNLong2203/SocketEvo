@@ -6,7 +6,7 @@ import Empty from "./Empty";
 import Chat from "./Chat/Chat";
 import { onAuthStateChanged } from "firebase/auth";
 import firebaseAuth from "@/utils/FirebaseConfig";
-import { CHECK_USER_ROUTE } from "@/utils/ApiRoutes";
+import { CHECK_USER_ROUTE, GET_MESSAGES_ROUTE } from "@/utils/ApiRoutes";
 import { useStateProvider } from "@/context/StateContext";
 import { reducerCases } from "@/context/constants"; 
 
@@ -62,6 +62,19 @@ const Main = () => {
       Router.push('/login');
     }
   }, [redirectLogin]);
+
+  useEffect(() => {
+    const getMessages = async (req, res, next) => {
+      const response = await axios.get(`${GET_MESSAGES_ROUTE}/${userInfo.id}/${currentChatUser.id}`);
+      dispatch({
+        type: reducerCases.SET_MESSAGES,
+        messages: response.data.messages,
+      });
+    }
+    if(currentChatUser?.id) {
+      getMessages();
+    }
+  }, [currentChatUser]);
 
   return (
     <div className="grid grid-cols-3 h-screen w-screen max-h-screen max-w-full overflow-hidden">

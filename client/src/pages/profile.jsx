@@ -47,6 +47,7 @@ const profile = () => {
             dispatch({
                 type: reducerCases.SET_USER_INFO,
                 userInfo: {
+                    id: response.data.id,
                     displayName: name,
                     email,
                     photoUrl: image,

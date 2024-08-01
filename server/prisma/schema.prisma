@@ -8,12 +8,26 @@ generator client {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  name      String
-  image     String   @default("")
-  about     String   @default("")
-  createdAt DateTime @default(now())
+  id              Int        @id @default(autoincrement())
+  email           String     @unique
+  name            String
+  image           String     @default("")
+  about           String     @default("")
+  sendMessages    Messages[] @relation("sendMessages")
+  receiveMessages Messages[] @relation("receiveMessages")
+  createdAt       DateTime   @default(now())
+}
+
+model Messages {
+  id            Int      @id @default(autoincrement())
+  sender_id     Int
+  sender        User     @relation("sendMessages", fields: [sender_id], references: [id])
+  receiver_id   Int
+  receiver      User     @relation("receiveMessages", fields: [receiver_id], references: [id])
+  type          String   @default("text")
+  message       String
+  messageStatus String   @default("sent")
+  createdAt     DateTime @default(now())
 }
 
 // npx prisma db push
