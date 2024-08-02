@@ -4,6 +4,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const compression = require('compression');
 const morgan = require('morgan');
+const { Server } = require('socket.io');
 const mainRoute = require('./routes/main.route');
 
 const app = express();
@@ -23,8 +24,26 @@ app.use((err, req, res, next) => {
     })
 })
 
-app.listen(process.env.PORT || 3000, () => {
+const server = app.listen(process.env.PORT || 3000, () => {
     console.log(`Server is running on port ${process.env.PORT || 3000}`);
 })
 
+const io = new Server(server, {
+    cors: {
+        origin: "http://localhost:3000",
+    }
+})
+
 global.onlineUsers = new Map();
+io.on('connection', (socket) => {
+    global.chatSocket = socket;
+    socket.on("add-user", (userId) => {
+        onlineUsers.set(userId, socket.id);
+    })
+    socket.on("send-message", (data) => {
+        const receiverSocket = onlineUsers.get(data.to);
+        if(receiverSocket) {
+            io.to(receiverSocket).emit("msg-receive", data);
+        }
+    })
+})

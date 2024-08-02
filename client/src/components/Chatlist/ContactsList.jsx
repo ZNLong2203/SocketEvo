@@ -24,7 +24,7 @@ const ContactsList = () => {
 
   return (
     <div className="h-full flex flex-col">
-      <div className="h-20 flex items-end px-3 py-4">
+      <div className="h-16 flex items-end px-3 py-4">
         <div className="flex items-center gap-12 text-white">
           <BiArrowBack
             className="cursor-pointer text-xl"

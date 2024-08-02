@@ -17,8 +17,7 @@ exports.addMessage = async (req, res, next) => {
             });
 
             return res.status(200).json({
-                message: 'Message sent successfully',
-                newMessage
+                messages: newMessage
             });
         }
         return res.status(400).json({ message: 'Message, from and to are required' });
