@@ -5,14 +5,16 @@ import { ImAttachment } from "react-icons/im";
 import { MdSend } from "react-icons/md";
 import { FaMicrophone } from "react-icons/fa";
 import { useStateProvider } from "@/context/StateContext";
-import { SEND_MESSAGE_ROUTE } from "@/utils/ApiRoutes";
+import { SEND_MESSAGE_ROUTE, ADD_IMAGE_MESSAGE_ROUTE } from "@/utils/ApiRoutes";
 import { reducerCases } from "@/context/constants";
 import EmojiPicker from "emoji-picker-react";
+import PhotoPicker from "../common/PhotoPicker";
 
 const MessageBar = () => {
   const [{ userInfo, currentChatUser, socket }, dispatch] = useStateProvider();
   const [message, setMessage] = useState("");
   const [showEmoji, setShowEmoji] = useState(false);
+  const [grabPhoto, setGrabPhoto] = useState(false);
   const emojiPickerRef = useRef(null);
 
   useEffect(() => {
@@ -23,6 +25,18 @@ const MessageBar = () => {
     };
     document.addEventListener("mousedown", handleOutSideClick);
   }, []);
+
+  useEffect(() => {
+    if(grabPhoto) {
+        const data = document.getElementById("photo-picker")
+        data.click()
+        document.body.onfocus = (e) => {
+            setTimeout(() => {
+                setGrabPhoto(false)
+            }, 1000)
+        }
+    }
+  }, [grabPhoto])
 
   const handleEmojiModal = () => {
     setShowEmoji(!showEmoji);
@@ -55,6 +69,39 @@ const MessageBar = () => {
     }
   };
 
+  const photoPickerChange = async (e) => {
+    try {
+      const file = e.target.files[0];
+      const formData = new FormData();
+      formData.append("image", file);
+
+      const response = await axios.post(ADD_IMAGE_MESSAGE_ROUTE, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        params: {
+          from: userInfo?.id,
+          to: currentChatUser?.id,
+        },
+      });
+      if(response.status===201) {
+        socket.current.emit("send-message", {
+          message: response.data.messages,
+          from: userInfo?.id,
+          to: currentChatUser?.id,
+        });
+        dispatch({
+          type: reducerCases.ADD_MESSAGES,
+          newMessages: response.data.messages,
+          fromSelf: true,
+        });
+        setGrabPhoto(false);
+      }
+    } catch(err) {
+      console.log(err);
+    }
+  };
+
   return (
     <div className="bg-panel-header-background h-20 px-4 flex items-center gap-6 relative z-10">
       <div className="flex gap-6">
@@ -72,6 +119,7 @@ const MessageBar = () => {
         <ImAttachment
           className="text-panel-header-icon cursor-pointer text-xl"
           title="Attach File"
+          onClick={() => setGrabPhoto(true)}
         />
       </div>
       <div className="w-full rounded-lg h-10 flex items-center">
@@ -92,6 +140,7 @@ const MessageBar = () => {
           <FaMicrophone className="text-panel-header-icon cursor-pointer text-xl" />
         </button>
       </div>
+      {grabPhoto && (<PhotoPicker onChange={photoPickerChange} />)}
     </div>
   );
 };

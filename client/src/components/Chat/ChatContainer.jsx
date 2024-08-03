@@ -2,6 +2,7 @@ import React from "react";
 import { useStateProvider } from "@/context/StateContext";
 import { calculateTime } from "@/utils/CalculateTime";
 import MessageStatus from "./MessageStatus";
+import ImageMessage from "./ImageMessage";
 
 const ChatContainer = () => {
   const [{ messages, currentChatUser, userInfo }] = useStateProvider();
@@ -46,6 +47,7 @@ const ChatContainer = () => {
                     </div>
                   </div>
                 )}
+                {message.type === "image" && <ImageMessage message={message} />}
               </div>
             ))}
           </div>

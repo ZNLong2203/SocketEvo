@@ -25,7 +25,7 @@ model Messages {
   receiver_id   Int
   receiver      User     @relation("receiveMessages", fields: [receiver_id], references: [id])
   type          String   @default("text")
-  message       String
+  messages       String
   messageStatus String   @default("sent")
   createdAt     DateTime @default(now())
 }

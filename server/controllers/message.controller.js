@@ -1,4 +1,5 @@
 const getPrismaInstant = require('../utils/PrismaClient');
+const { renameSync } = require('fs');
 const prisma = getPrismaInstant();
 
 exports.addMessage = async (req, res, next) => {
@@ -72,6 +73,35 @@ exports.getMessages = async (req, res, next) => {
             });
         } 
         return res.status(400).json({ message: 'From and to are required' });
+    } catch(err) {
+        next(err);
+    }
+}
+
+exports.uploadImageMessages = async (req, res, next) => {
+    try {
+        if(req.file) {
+            const date = Date.now();
+            let fileName = "uploads/images/" + date + req.file.originalname;
+            renameSync(req.file.path, fileName);
+
+            const { from, to } = req.body;
+            if(from && to) {
+                const messages = await prisma.messages.create({
+                    data: {
+                        message: fileName,
+                        type: 'image',
+                        sender: {connect: {id: parseInt(from)}},
+                        receiver: {connect: {id: parseInt(to)}},
+                    }
+                })
+                return res.status(200).json({
+                    messages
+                })
+            }
+            return res.status(400).json({ message: 'From and to are required' });
+        }
+        return res.status(400).json({ message: 'Image is required'});
     } catch(err) {
         next(err);
     }
