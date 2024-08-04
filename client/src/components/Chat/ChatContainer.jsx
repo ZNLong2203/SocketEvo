@@ -1,6 +1,7 @@
 import React from "react";
 import { useStateProvider } from "@/context/StateContext";
 import { calculateTime } from "@/utils/CalculateTime";
+import { HOST } from "@/utils/ApiRoutes";
 import MessageStatus from "./MessageStatus";
 import ImageMessage from "./ImageMessage";
 
@@ -58,7 +59,7 @@ const ChatContainer = () => {
                     }`}
                   >
                     <audio controls>
-                      <source src={message.messages} type="audio/wav" />
+                      <source src={`${HOST}/${message.messages}`} type="audio/wav" />
                       Your browser does not support the audio element.
                     </audio>
                     <div className="flex gap-1 items-end">

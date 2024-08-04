@@ -86,7 +86,7 @@ exports.uploadImageMessages = async (req, res, next) => {
             let fileName = "uploads/images/" + date + req.file.originalname;
             renameSync(req.file.path, fileName);
 
-            const { from, to } = req.query;
+            const { from, to } = req.body;
             if(from && to) {
                 const messages = await prisma.messages.create({
                     data: {
@@ -111,15 +111,17 @@ exports.uploadImageMessages = async (req, res, next) => {
 exports.uploadAudioMessages = async (req, res, next) => {
     try {
         if(req.file) {
-            const { userId, chatId } = req.body;
-            const audioFile = req.file.path;
-    
+            const date = Date.now();
+            let fileName = "uploads/audio/" + date + req.file.originalname;
+            renameSync(req.file.path, fileName);
+
+            const { from, to } = req.body;
             const newMessages =  await prisma.messages.create({
                 data: {
-                    messages: audioFile,
+                    messages: fileName,
                     type: 'audio',
-                    sender: {connect: {id: parseInt(userId)}},
-                    receiver: {connect: {id: parseInt(chatId)}},
+                    sender: {connect: {id: parseInt(from)}},
+                    receiver: {connect: {id: parseInt(to)}},
                 }
             })
             return res.status(200).json({

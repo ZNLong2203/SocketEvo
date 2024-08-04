@@ -15,7 +15,8 @@ app.use(cors());
 app.use(express.json());
 app.use(helmet());
 app.use(compression());
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads/images', express.static(path.join(__dirname, 'uploads/images')));
+app.use('/uploads/audio', express.static(path.join(__dirname, 'uploads/audio')));
 app.use('/', mainRoute);
 
 app.use((err, req, res, next) => {

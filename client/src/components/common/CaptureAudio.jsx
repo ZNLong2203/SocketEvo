@@ -122,11 +122,15 @@ const CaptureAudio = ({ hide }) => {
       type: "audio/wav",
     });
     formData.append("audio", audioFile);
-    formData.append("userId", userInfo.id);
-    formData.append("chatId", currentChatUser.id);
+    formData.append("from", userInfo.id);
+    formData.append("to", currentChatUser.id);
 
     try {
-      const response = await axios.post(ADD_AUDIO_MESSAGE_ROUTE, formData);
+      const response = await axios.post(ADD_AUDIO_MESSAGE_ROUTE, formData ,{
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
       socket.current.emit("send-message", {
         message: response.data.messages,
         from: userInfo.id,

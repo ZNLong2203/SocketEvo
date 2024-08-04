@@ -79,14 +79,12 @@ const MessageBar = () => {
       const file = e.target.files[0];
       const formData = new FormData();
       formData.append("image", file);
+      formData.appent("from", userInfo?.id);
+      formData.append("to", currentChatUser?.id);
 
       const response = await axios.post(ADD_IMAGE_MESSAGE_ROUTE, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
-        },
-        params: {
-          from: userInfo?.id,
-          to: currentChatUser?.id,
         },
       });
       if (response.data.messages) {
