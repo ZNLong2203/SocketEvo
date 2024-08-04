@@ -9,17 +9,22 @@ import { SEND_MESSAGE_ROUTE, ADD_IMAGE_MESSAGE_ROUTE } from "@/utils/ApiRoutes";
 import { reducerCases } from "@/context/constants";
 import EmojiPicker from "emoji-picker-react";
 import PhotoPicker from "../common/PhotoPicker";
+import CaptureAudio from "../common/CaptureAudio";
 
 const MessageBar = () => {
   const [{ userInfo, currentChatUser, socket }, dispatch] = useStateProvider();
   const [message, setMessage] = useState("");
   const [showEmoji, setShowEmoji] = useState(false);
   const [grabPhoto, setGrabPhoto] = useState(false);
+  const [showAudioRecorder, setShowAudioRecorder] = useState(false);
   const emojiPickerRef = useRef(null);
 
   useEffect(() => {
     const handleOutSideClick = (e) => {
-      if (emojiPickerRef.current && !emojiPickerRef.current.contains(e.target)) {
+      if (
+        emojiPickerRef.current &&
+        !emojiPickerRef.current.contains(e.target)
+      ) {
         setShowEmoji(false);
       }
     };
@@ -27,16 +32,16 @@ const MessageBar = () => {
   }, []);
 
   useEffect(() => {
-    if(grabPhoto) {
-        const data = document.getElementById("photo-picker")
-        data.click()
-        document.body.onfocus = (e) => {
-            setTimeout(() => {
-                setGrabPhoto(false)
-            }, 1000)
-        }
+    if (grabPhoto) {
+      const data = document.getElementById("photo-picker");
+      data.click();
+      document.body.onfocus = (e) => {
+        setTimeout(() => {
+          setGrabPhoto(false);
+        }, 1000);
+      };
     }
-  }, [grabPhoto])
+  }, [grabPhoto]);
 
   const handleEmojiModal = () => {
     setShowEmoji(!showEmoji);
@@ -84,7 +89,7 @@ const MessageBar = () => {
           to: currentChatUser?.id,
         },
       });
-      if(response.status===201) {
+      if (response.data.messages) {
         socket.current.emit("send-message", {
           message: response.data.messages,
           from: userInfo?.id,
@@ -97,50 +102,72 @@ const MessageBar = () => {
         });
         setGrabPhoto(false);
       }
-    } catch(err) {
+    } catch (err) {
       console.log(err);
     }
   };
 
   return (
     <div className="bg-panel-header-background h-20 px-4 flex items-center gap-6 relative z-10">
-      <div className="flex gap-6">
-        <BsEmojiSmile
-          className="text-panel-header-icon cursor-pointer text-xl"
-          title="Emoji"
-          id="emoji-open"
-          onClick={handleEmojiModal}
-        />
-        {showEmoji && (
-          <div className="absolute bottom-24 left-16 z-40" ref={emojiPickerRef}>
-            <EmojiPicker onEmojiClick={handleEmojiClick} theme="dark" />
+      {!showAudioRecorder && (
+        <>
+          <div className="flex gap-6">
+            <BsEmojiSmile
+              className="text-panel-header-icon cursor-pointer text-xl"
+              title="Emoji"
+              id="emoji-open"
+              onClick={handleEmojiModal}
+            />
+            {showEmoji && (
+              <div
+                className="absolute bottom-24 left-16 z-40"
+                ref={emojiPickerRef}
+              >
+                <EmojiPicker onEmojiClick={handleEmojiClick} theme="dark" />
+              </div>
+            )}
+            <ImAttachment
+              className="text-panel-header-icon cursor-pointer text-xl"
+              title="Attach File"
+              onClick={() => setGrabPhoto(true)}
+            />
           </div>
-        )}
-        <ImAttachment
-          className="text-panel-header-icon cursor-pointer text-xl"
-          title="Attach File"
-          onClick={() => setGrabPhoto(true)}
-        />
-      </div>
-      <div className="w-full rounded-lg h-10 flex items-center">
-        <input
-          type="text"
-          placeholder="Type a message"
-          className="bg-input-background text-sm focus:outline-none text-white h-10 rounded-lg px-5 py-4 w-full"
-          onChange={(e) => setMessage(e.target.value)}
-          value={message}
-        />
-      </div>
-      <div className="flex w-10 items-center justify-center">
-        <button className="flex flex-row gap-4" onClick={sendMessage}>
-          <MdSend
-            className="text-panel-header-icon cursor-pointer text-xl"
-            title="Send Message"
-          />
-          <FaMicrophone className="text-panel-header-icon cursor-pointer text-xl" />
-        </button>
-      </div>
-      {grabPhoto && (<PhotoPicker onChange={photoPickerChange} />)}
+          <div className="w-full rounded-lg h-10 flex items-center">
+            <input
+              type="text"
+              placeholder="Type a message"
+              className="bg-input-background text-sm focus:outline-none text-white h-10 rounded-lg px-5 py-4 w-full"
+              onChange={(e) => setMessage(e.target.value)}
+              value={message}
+            />
+          </div>
+          <div className="flex w-10 items-center justify-center">
+            <button className="flex flex-row gap-4" onClick={sendMessage}>
+              {message.length ? (
+                <>
+                  <MdSend
+                    className="text-panel-header-icon cursor-pointer text-xl"
+                    title="Send Message"
+                  />
+                </>
+              ) : (
+                <>
+                  <MdSend
+                    className="text-panel-header-icon cursor-pointer text-xl"
+                    title="Send Message"
+                  />
+                  <FaMicrophone
+                    className="text-panel-header-icon cursor-pointer text-xl"
+                    onClick={() => setShowAudioRecorder(true)}
+                  />
+                </>
+              )}
+            </button>
+          </div>
+        </>
+      )}
+      {grabPhoto && <PhotoPicker onChange={photoPickerChange} />}
+      {showAudioRecorder && <CaptureAudio hide={setShowAudioRecorder} />}
     </div>
   );
 };

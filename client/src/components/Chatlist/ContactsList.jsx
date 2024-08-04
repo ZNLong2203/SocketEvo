@@ -50,22 +50,18 @@ const ContactsList = () => {
             </div>
           </div>
         </div>
-        {Object.entries(allContacts).map(([initialLetter, userList]) => {
-          return (
-            <div key={Date.now() + initialLetter}>
-              <div className="text-teal-light pl-10 py-5">{initialLetter}</div>
-              {userList.map((contact) => {
-                return (
-                  <ChatListItem 
-                    key={contact._id}
-                    data={contact}
-                    isContactPage={true}
-                  />
-                )
-              })}
-            </div>  
-          )
-        })}
+        {Object.entries(allContacts).map(([initialLetter, userList]) => (
+          <div key={initialLetter}>
+            <div className="text-teal-light pl-10 py-5">{initialLetter}</div>
+            {userList.map((contact) => (
+              <ChatListItem 
+                key={contact.id}
+                data={contact}
+                isContactPage={true}
+              />
+            ))}
+          </div>
+        ))}
       </div>
     </div>
   );

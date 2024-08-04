@@ -17,7 +17,7 @@ const ImageMessage = ({ message }) => {
     >
       <div className="relative">
         <Image
-          src={`${HOST}/${message.message}`}
+          src={`${HOST}/${message.messages}`}
           alt="asset"
           className="rounded-lg"
           height={300}

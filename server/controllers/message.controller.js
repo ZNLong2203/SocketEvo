@@ -9,7 +9,7 @@ exports.addMessage = async (req, res, next) => {
         if(message && from && to) {
             const newMessage = await prisma.messages.create({
                 data: {
-                    message,
+                    messages: message,
                     sender: {connect: {id: parseInt(from)}},
                     receiver: {connect: {id: parseInt(to)}},
                     messageStatus: getUser ? "delivered" : "sent"
@@ -85,11 +85,11 @@ exports.uploadImageMessages = async (req, res, next) => {
             let fileName = "uploads/images/" + date + req.file.originalname;
             renameSync(req.file.path, fileName);
 
-            const { from, to } = req.body;
+            const { from, to } = req.query;
             if(from && to) {
                 const messages = await prisma.messages.create({
                     data: {
-                        message: fileName,
+                        messages: fileName,
                         type: 'image',
                         sender: {connect: {id: parseInt(from)}},
                         receiver: {connect: {id: parseInt(to)}},
