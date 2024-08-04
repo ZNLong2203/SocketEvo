@@ -142,12 +142,13 @@ const MessageBar = () => {
             />
           </div>
           <div className="flex w-10 items-center justify-center">
-            <button className="flex flex-row gap-4" onClick={sendMessage}>
+            <button className="flex flex-row gap-4">
               {message.length ? (
                 <>
                   <MdSend
                     className="text-panel-header-icon cursor-pointer text-xl"
                     title="Send Message"
+                    onClick={sendMessage}
                   />
                 </>
               ) : (
@@ -155,6 +156,7 @@ const MessageBar = () => {
                   <MdSend
                     className="text-panel-header-icon cursor-pointer text-xl"
                     title="Send Message"
+                    onClick={sendMessage}
                   />
                   <FaMicrophone
                     className="text-panel-header-icon cursor-pointer text-xl"

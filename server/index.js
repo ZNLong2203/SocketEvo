@@ -4,6 +4,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const compression = require('compression');
 const morgan = require('morgan');
+const path = require('path');
 const { Server } = require('socket.io');
 const mainRoute = require('./routes/main.route');
 
@@ -14,6 +15,7 @@ app.use(cors());
 app.use(express.json());
 app.use(helmet());
 app.use(compression());
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/', mainRoute);
 
 app.use((err, req, res, next) => {

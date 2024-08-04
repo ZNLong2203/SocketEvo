@@ -1,5 +1,6 @@
 const getPrismaInstant = require('../utils/PrismaClient');
 const { renameSync } = require('fs');
+const path = require('path');
 const prisma = getPrismaInstant();
 
 exports.addMessage = async (req, res, next) => {
@@ -102,6 +103,30 @@ exports.uploadImageMessages = async (req, res, next) => {
             return res.status(400).json({ message: 'From and to are required' });
         }
         return res.status(400).json({ message: 'Image is required'});
+    } catch(err) {
+        next(err);
+    }
+}
+
+exports.uploadAudioMessages = async (req, res, next) => {
+    try {
+        if(req.file) {
+            const { userId, chatId } = req.body;
+            const audioFile = req.file.path;
+    
+            const newMessages =  await prisma.messages.create({
+                data: {
+                    messages: audioFile,
+                    type: 'audio',
+                    sender: {connect: {id: parseInt(userId)}},
+                    receiver: {connect: {id: parseInt(chatId)}},
+                }
+            })
+            return res.status(200).json({
+                messages: newMessages
+            });
+        } 
+        return res.status(400).json({ message: 'Audio is required' });
     } catch(err) {
         next(err);
     }

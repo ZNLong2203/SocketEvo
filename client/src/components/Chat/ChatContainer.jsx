@@ -18,7 +18,7 @@ const ChatContainer = () => {
           <div className="flex flex-col justify-end w-full gap-1 overflow-auto mt-2">
             {validMessages.map((message) => (
               <div
-                key={message.id} 
+                key={message.id}
                 className={`flex ${
                   message.sender_id === currentChatUser.id
                     ? "justify-start"
@@ -48,6 +48,31 @@ const ChatContainer = () => {
                   </div>
                 )}
                 {message.type === "image" && <ImageMessage message={message} />}
+                {message.type === "audio" && (
+                  <div
+                    className={`py-2 px-4 text-white text-sm rounded-md flex gap-2 items-end max-w-[45%] 
+                    ${
+                      message.sender_id === currentChatUser.id
+                        ? "bg-incoming-background"
+                        : "bg-outgoing-background"
+                    }`}
+                  >
+                    <audio controls>
+                      <source src={message.messages} type="audio/wav" />
+                      Your browser does not support the audio element.
+                    </audio>
+                    <div className="flex gap-1 items-end">
+                      <span className="text-bubble-meta text-[11px] pt-1 min-w-fit">
+                        {calculateTime(message.createdAt)}
+                      </span>
+                      <span>
+                        {message.sender_id === userInfo.id && (
+                          <MessageStatus messageStatus={message.messageStatus} />
+                        )}
+                      </span>
+                    </div>
+                  </div>
+                )}
               </div>
             ))}
           </div>
