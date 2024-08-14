@@ -8,66 +8,72 @@ import { onAuthStateChanged } from "firebase/auth";
 import firebaseAuth from "@/utils/FirebaseConfig";
 import { CHECK_USER_ROUTE, GET_MESSAGES_ROUTE, HOST } from "@/utils/ApiRoutes";
 import { useStateProvider } from "@/context/StateContext";
-import { reducerCases } from "@/context/constants"; 
+import { reducerCases } from "@/context/constants";
 import io from "socket.io-client";
+import SearchMessages from "./Chat/SearchMessages";
 
 const Main = () => {
   const [redirectLogin, setRedirectLogin] = useState(false);
-  const [{ userInfo, currentChatUser }, dispatch] = useStateProvider();
+  const [{ userInfo, currentChatUser, messagesSearch }, dispatch] = useStateProvider();
   const [socketEvent, setSocketEvent] = useState(false);
   const socket = useRef();
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(firebaseAuth, async (currentUser) => {
-      if (!currentUser) {
-        setRedirectLogin(true);
-      } else {
-        if (!userInfo && currentUser.email) {
-          try {
-            const response = await axios.post(CHECK_USER_ROUTE, { email: currentUser.email });
-            if (response.data.user === null) {
-              dispatch({
-                type: reducerCases.SET_NEW_USER,
-                newUser: true,
+    const unsubscribe = onAuthStateChanged(
+      firebaseAuth,
+      async (currentUser) => {
+        if (!currentUser) {
+          setRedirectLogin(true);
+        } else {
+          if (!userInfo && currentUser.email) {
+            try {
+              const response = await axios.post(CHECK_USER_ROUTE, {
+                email: currentUser.email,
               });
-              dispatch({
-                type: reducerCases.SET_USER_INFO,
-                userInfo: {
-                  displayName: currentUser.displayName,
-                  email: currentUser.email,
-                  photoUrl: currentUser.photoURL,
-                  status: "",
-                },
-              });
-              Router.push('/profile');
-            } else {
-              dispatch({
-                type: reducerCases.SET_NEW_USER,
-                newUser: false,
-              });
-              dispatch({
-                type: reducerCases.SET_USER_INFO,
-                userInfo: response.data.user,
-              });
+              if (response.data.user === null) {
+                dispatch({
+                  type: reducerCases.SET_NEW_USER,
+                  newUser: true,
+                });
+                dispatch({
+                  type: reducerCases.SET_USER_INFO,
+                  userInfo: {
+                    displayName: currentUser.displayName,
+                    email: currentUser.email,
+                    photoUrl: currentUser.photoURL,
+                    status: "",
+                  },
+                });
+                Router.push("/profile");
+              } else {
+                dispatch({
+                  type: reducerCases.SET_NEW_USER,
+                  newUser: false,
+                });
+                dispatch({
+                  type: reducerCases.SET_USER_INFO,
+                  userInfo: response.data.user,
+                });
+              }
+            } catch (error) {
+              console.error("Error checking user:", error);
             }
-          } catch (error) {
-            console.error("Error checking user:", error);
           }
         }
       }
-    });
+    );
 
     return () => unsubscribe();
   }, [userInfo, dispatch]);
 
   useEffect(() => {
     if (redirectLogin) {
-      Router.push('/login');
+      Router.push("/login");
     }
   }, [redirectLogin]);
 
   useEffect(() => {
-    if(userInfo) {
+    if (userInfo) {
       socket.current = io(HOST);
       socket.current.emit("add-user", userInfo.id);
       dispatch({
@@ -78,37 +84,43 @@ const Main = () => {
   }, [userInfo]);
 
   useEffect(() => {
-    if(socket.current && !socketEvent) {
+    if (socket.current && !socketEvent) {
       socket.current.on("msg-receive", (data) => {
         dispatch({
           type: reducerCases.ADD_MESSAGES,
           newMessages: data.message,
         });
-      })
+      });
       setSocketEvent(true);
     }
   }, [socket.current]);
 
   useEffect(() => {
     const getMessages = async (req, res, next) => {
-      const response = await axios.get(`${GET_MESSAGES_ROUTE}/${userInfo.id}/${currentChatUser.id}`);
+      const response = await axios.get(
+        `${GET_MESSAGES_ROUTE}/${userInfo.id}/${currentChatUser.id}`
+      );
       dispatch({
         type: reducerCases.SET_MESSAGES,
         messages: response.data.messages,
       });
-    }
-    if(currentChatUser?.id) {
+    };
+    if (currentChatUser?.id) {
       getMessages();
     }
   }, [currentChatUser]);
 
   return (
-    <div className="grid grid-cols-3 h-screen w-screen max-h-screen max-w-full overflow-hidden">
+    <div className="grid grid-cols-main h-screen w-screen max-h-screen max-w-full overflow-hidden">
       <ChatList />
-      {
-        currentChatUser ? <Chat /> : <Empty />
-      }
-      <Chat />
+      {currentChatUser ? (
+        <div className={messagesSearch ? "grid grid-cols-2" : "grid-cols-2"}> 
+          <Chat />
+          {messagesSearch && <SearchMessages />}
+        </div>
+      ) : (
+        <Empty />
+      )}
     </div>
   );
 };

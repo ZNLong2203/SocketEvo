@@ -1,7 +1,6 @@
 const express = require('express');
 const dotenv = require('dotenv').config();
 const cors = require('cors');
-const helmet = require('helmet');
 const compression = require('compression');
 const morgan = require('morgan');
 const path = require('path');
@@ -11,12 +10,17 @@ const mainRoute = require('./routes/main.route');
 const app = express();
 
 app.use(morgan('dev'));
-app.use(cors());
 app.use(express.json());
-app.use(helmet());
 app.use(compression());
+app.use(cors({
+    origin: "http://localhost:3000", 
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    credentials: true
+}));
 app.use('/uploads/images', express.static(path.join(__dirname, 'uploads/images')));
-app.use('/uploads/audio', express.static(path.join(__dirname, 'uploads/audio')));
+app.use('/uploads/audio', express.static(path.join(__dirname, 'uploads/audio'), {
+    acceptRanges: true
+}));
 app.use('/', mainRoute);
 
 app.use((err, req, res, next) => {
@@ -34,6 +38,8 @@ const server = app.listen(process.env.PORT || 3000, () => {
 const io = new Server(server, {
     cors: {
         origin: "http://localhost:3000",
+        methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        credentials: true
     }
 })
 

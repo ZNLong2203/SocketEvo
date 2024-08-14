@@ -5,6 +5,7 @@ import { IoVideocam } from "react-icons/io5";
 import { BiSearchAlt2 } from "react-icons/bi";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { useStateProvider } from "@/context/StateContext";
+import { reducerCases } from "@/context/constants";
 
 const ChatHeader = () => {
   const [{currentChatUser}, dispatch] = useStateProvider();
@@ -31,6 +32,7 @@ const ChatHeader = () => {
           />
           <BiSearchAlt2 
             className="text-panel-header-icon cursor-pointer text-xl"
+            onClick={() => dispatch({ type: reducerCases.SET_MESSAGES_SEARCH })}
           />
           <BsThreeDotsVertical 
             className="text-panel-header-icon cursor-pointer text-xl"

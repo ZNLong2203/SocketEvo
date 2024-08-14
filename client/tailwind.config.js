@@ -34,6 +34,9 @@ module.exports = {
         "bubble-meta": "hsla(0,0%,100%,0.6)",
         "icon-ack": "#53bdeb",
       },
+      gridTemplateColumns: {
+        main: "1fr 2.4fr",
+      },
     },
   },
   plugins: [],

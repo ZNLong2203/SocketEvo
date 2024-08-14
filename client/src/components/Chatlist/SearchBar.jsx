@@ -16,9 +16,9 @@ const SearchBar = () => {
             className="bg-transparent text-sm focus:outline-none text-white w-full"
           />
         </div>
-        <div className="pr-5 pl-3">
-          <BsFilter className="text-panel-header-icon cursor-pointer text-xl" />
-        </div>
+      </div>
+      <div className="pr-5 pl-3">
+        <BsFilter className="text-panel-header-icon cursor-pointer text-xl" />
       </div>
     </div>
   );
