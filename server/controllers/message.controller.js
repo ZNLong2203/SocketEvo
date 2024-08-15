@@ -241,7 +241,6 @@ exports.getInitialContactsWithMessages = async (req, res, next) => {
             users: Array.from(users.values()),
             onlineUsers: Array.from(onlineUsers.keys())
         });
-
     } catch (err) {
         next(err);
     }
