@@ -57,7 +57,7 @@ const ContactsList = () => {
               <ChatListItem 
                 key={contact.id}
                 data={contact}
-                isContactPage={true}
+                isContactsPage={true}
               />
             ))}
           </div>

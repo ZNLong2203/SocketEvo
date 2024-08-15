@@ -9,6 +9,7 @@ const uploadAudio = multer({ dest: "uploads/audio/" });
 // Path: api/messages/
 
 router.post('/', messageController.addMessage);
+router.get('/contacts/:from', messageController.getInitialContactsWithMessages);
 router.get('/:from/:to', messageController.getMessages);
 
 router.post('/image', uploadImage.single('image'), messageController.uploadImageMessages);
