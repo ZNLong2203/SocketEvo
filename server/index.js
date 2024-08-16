@@ -55,4 +55,34 @@ io.on('connection', (socket) => {
             io.to(receiverSocket).emit("msg-receive", data);
         }
     })
+    socket.on("outgoing-voice-call", (data) => {
+        const receiverSocket = onlineUsers.get(data.to);
+        if(receiverSocket) {
+            io.to(receiverSocket).emit("incoming-voice-call", data);
+        }
+    })
+    socket.on("outgoing-video-call", (data) => {
+        const receiverSocket = onlineUsers.get(data.to);
+        if(receiverSocket) {
+            io.to(receiverSocket).emit("incoming-video-call", data);
+        }
+    })
+    socket.on("reject-voice-call", (data) => {
+        const receiverSocket = onlineUsers.get(data.from);
+        if(receiverSocket) {
+            io.to(receiverSocket).emit("reject-voice-call");
+        }
+    })
+    socket.on("reject-video-call", (data) => {
+        const receiverSocket = onlineUsers.get(data.from);
+        if(receiverSocket) {
+            io.to(receiverSocket).emit("reject-video-call");
+        }
+    })
+    socket.on("accept-incoming-call", (data) => {
+        const receiverSocket = onlineUsers.get(id);
+        if(receiverSocket) {
+            io.to(receiverSocket).emit("accept-call");
+        }
+    })
 })
