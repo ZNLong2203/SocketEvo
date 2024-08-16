@@ -8,13 +8,28 @@ import ChatListItem from "./ChatListItem";
 
 const ContactsList = () => {
   const [allContacts, setAllContacts] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchContacts, setSearchContacts] = useState([]);
   const [{}, dispatch] = useStateProvider();
+
+  useEffect(() => {
+     if(searchTerm.length > 0) {
+      const filteredData = {};
+      Object.keys(allContacts).forEach((key) => {
+        filteredData[key] = allContacts[key].filter((contact) =>
+          contact.name.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+      })
+      setSearchContacts(filteredData);
+    }
+  }, [searchTerm]);
 
   useEffect(() => {
     const getContacts = async () => {
       try {
         const response = await axios.get(GET_ALL_CONTACTS_ROUTE);
         setAllContacts(response.data.users);
+        setSearchContacts(response.data.users);
       } catch (err) {
         console.error(err);
       }
@@ -46,11 +61,13 @@ const ContactsList = () => {
                 type="text"
                 placeholder="Search Contacts"
                 className="bg-transparent text-sm focus:outline-none text-white w-full"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
           </div>
         </div>
-        {Object.entries(allContacts).map(([initialLetter, userList]) => (
+        {Object.entries(searchContacts).map(([initialLetter, userList]) => (
           <div key={initialLetter}>
             <div className="text-teal-light pl-10 py-5">{initialLetter}</div>
             {userList.map((contact) => (
