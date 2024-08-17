@@ -13,9 +13,8 @@ app.use(morgan('dev'));
 app.use(express.json());
 app.use(compression());
 app.use(cors({
-    origin: process.env.CLIENT_URL, 
+    origin: '*', 
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    credentials: true
 }));
 app.use('/uploads/images', express.static(path.join(__dirname, 'uploads/images')));
 app.use('/uploads/audio', express.static(path.join(__dirname, 'uploads/audio'), {
@@ -37,9 +36,8 @@ const server = app.listen(process.env.PORT || 3000, () => {
 
 const io = new Server(server, {
     cors: {
-        origin: process.env.CLIENT_URL,
+        origin: '*',
         methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-        credentials: true
     }
 })
 
