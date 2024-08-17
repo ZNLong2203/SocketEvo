@@ -13,7 +13,7 @@ app.use(morgan('dev'));
 app.use(express.json());
 app.use(compression());
 app.use(cors({
-    origin: "http://localhost:3000", 
+    origin: process.env.CLIENT_URL, 
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     credentials: true
 }));
@@ -37,7 +37,7 @@ const server = app.listen(process.env.PORT || 3000, () => {
 
 const io = new Server(server, {
     cors: {
-        origin: "http://localhost:3000",
+        origin: process.env.CLIENT_URL,
         methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         credentials: true
     }
