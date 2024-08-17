@@ -1,5 +1,5 @@
 // const HOST = "http://localhost:3005";
-const HOST = "be-socketevo.up.railway.app";
+const HOST = "https://be-socketevo.up.railway.app";
 
 const CHECK_USER_ROUTE = `${HOST}/api/auth/login`;
 const USERS_ROUTE = `${HOST}/api/users`;
