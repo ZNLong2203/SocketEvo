@@ -65,7 +65,7 @@ const ChatListHeader = () => {
           className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 shadow-lg z-10 rounded"
         >
           <div
-            className="bg-slate-500 hover:bg-slate-400 cursor-pointer px-4 py-2 text-gray-700 hover:bg-gray-100"
+            className="bg-slate-500 hover:bg-slate-400 cursor-pointer px-4 py-2 text-gray-70"
             onClick={handleLogOut}
           >
             Log Out
