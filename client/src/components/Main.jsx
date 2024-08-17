@@ -13,6 +13,8 @@ import io from "socket.io-client";
 import SearchMessages from "./Chat/SearchMessages";
 import VideoCall from "./Call/VideoCall";
 import VoiceCall from "./Call/VoiceCall";
+import IncomingVideoCall from "./common/IncomingVideoCall";
+import IncomingVoiceCall from "./common/IncomingVoiceCall";
 
 const Main = () => {
   const [redirectLogin, setRedirectLogin] = useState(false);
@@ -104,6 +106,40 @@ const Main = () => {
           newMessages: data.message,
         });
       });
+      socket.current.on("incoming-voice-call", ({ from, roomId, callType }) => {
+        dispatch({
+          type: reducerCases.SET_INCOMING_VOICE_CALL,
+          incomingVoiceCall: {
+            ...from,
+            roomId,
+            callType,
+          },
+        });
+      });
+
+      socket.current.on("incoming-video-call", ({ from, roomId, callType }) => {
+        dispatch({
+          type: reducerCases.SET_INCOMING_VIDEO_CALL,
+          incomingVideoCall: {
+            ...from,
+            roomId,
+            callType,
+          },
+        });
+      });
+
+      socket.current.on("reject-voice-call", () => {
+        dispatch({
+          type: reducerCases.END_CALL,
+        });
+      });
+
+      socket.current.on("reject-video-call", () => {
+        dispatch({
+          type: reducerCases.END_CALL,
+        });
+      });
+
       setSocketEvent(true);
     }
   }, [socket.current]);
@@ -125,6 +161,8 @@ const Main = () => {
 
   return (
     <>
+      {incomingVideoCall && <IncomingVideoCall />}
+      {incomingVoiceCall && <IncomingVoiceCall />}
       {videoCall && (
         <div className="h-screen w-screen max-h-full overflow-hidden">
           <VideoCall />
