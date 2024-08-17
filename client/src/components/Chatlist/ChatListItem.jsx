@@ -65,7 +65,7 @@ const ChatListItem = ({ data, isContactsPage = false }) => {
                 data?.about || "\u00A0"
               ) : (
                 <div className="flex items-center gap-1 max-w-[200px] sm:max-w-[250px] md:max-w-[300px] lg:max-w-[200px] xl:max-w-[300px]">
-                  {data?.sender_id === userInfo.id ? (
+                  {data?.sender_id === userInfo?.id ? (
                     <MessageStatus messageStatus={data.messageStatus} />
                   ) : null}
                   {data.type === "text" && (
