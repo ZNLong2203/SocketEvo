@@ -16,7 +16,7 @@ const SearchBar = () => {
         <div className="flex-grow">
           <input
             type="text"
-            placeholder="Search or start new chat"
+            placeholder=""
             className="bg-transparent text-sm focus:outline-none text-white w-full"
             value={contactSearch}
             onChange={(e) => dispatch({

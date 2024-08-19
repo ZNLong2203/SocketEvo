@@ -2,6 +2,7 @@ import Avatar from "../common/Avatar";
 import React, { useState, useEffect } from "react";
 import Router from "next/router";
 import { BsFillChatLeftTextFill, BsThreeDotsVertical } from "react-icons/bs";
+import { FaArrowRight } from "react-icons/fa6";
 import { useStateProvider } from "@/context/StateContext";
 import { reducerCases } from "@/context/constants";
 
@@ -47,7 +48,9 @@ const ChatListHeader = () => {
       <div className="cursor-pointer">
         <Avatar type="sm" image={userInfo?.image} />
       </div>
-      <div className="flex gap-6">
+      <div className="flex gap-6 mt-2">
+        <div className="text-panel-header-icon">New Chat -&gt;</div>
+        {/* <FaArrowRight  className="text-panel-header-icon cursor-pointer text-xl"/> */}
         <BsFillChatLeftTextFill
           className="text-panel-header-icon cursor-pointer text-xl"
           title="New Chat"

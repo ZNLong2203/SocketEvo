@@ -136,6 +136,7 @@ const MessageBar = () => {
               placeholder="Type a message"
               className="bg-input-background text-sm focus:outline-none text-white h-10 rounded-lg px-5 py-4 w-full"
               onChange={(e) => setMessage(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && sendMessage()}
               value={message}
             />
           </div>
